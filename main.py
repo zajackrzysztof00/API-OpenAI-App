@@ -3,8 +3,12 @@ from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QLineEdit, Q
 from PyQt5.QtCore import Qt, QThread
 import openai
 
-with open("key.txt",'r',encoding = 'utf-8') as key:
-    openai.api_key = key.read()
+try:
+    with open("key.txt", 'r', encoding='utf-8') as key:
+        openai.api_key = key.read().strip()
+except FileNotFoundError:
+    QMessageBox.critical(None, "Error", "API key file not found!")
+    sys.exit(1)
 
 class Article_Generator(QThread):
     def __init__(self, prompt_list, input_file, output_file):
